@@ -2,20 +2,23 @@
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
+#include <shader/shader.h>
 #include "iostream"
 
 const char *vertexShaderSource = "#version 330 core\n"
     "layout (location = 0) in vec3 aPos;\n"
     "void main()\n"
     "{\n"
-    "   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+    "   gl_Position = vec4(aPos, 1.0);\n"
     "}\0";
 
 const char *fragmentShaderSource = "#version 330 core\n"
     "out vec4 FragColor;\n"
+    "uniform vec4 ourColor;\n"
     "void main()\n"
     "{\n"
-    "    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+    "    FragColor = ourColor;\n"
     "}\0"; 
 
 void processInput(GLFWwindow* window) 
@@ -84,38 +87,7 @@ int main(int argc, char** argv)
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    shaderProgram = glCreateProgram();
-
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-
-    if (!success)
-    {
-        glGetShaderInfoLog(vertexShader, 512, NULL, infolog);
-        std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infolog << std::endl;
-    }
-
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-
-    if (!success)
-    {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infolog);
-        std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infolog << std::endl;
-    }
+    Shader shader = Shader("/home/juan-ros-workspace/Documents/OpenGL_Dev/OpenGL_Tests/Primitives_Render/shaders/vertexShader.vs", "/home/juan-ros-workspace/Documents/OpenGL_Dev/OpenGL_Tests/Primitives_Render/shaders/fragmentShader.fs");
 
     glGenBuffers(1, &VBO1);
     glGenBuffers(1, &VBO2);
@@ -143,12 +115,17 @@ int main(int argc, char** argv)
 
     while (!glfwWindowShouldClose(window))
     {
+        float timeVar = glfwGetTime();
+        float greenValue = (sin(timeVar) / 2.0f) + 0.5f;
+
         processInput(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
+        shader.use();
+        shader.setVec4("ourColor", 0.5, 0.0, 0.0, 1.0);
+
         glBindVertexArray(VAO1);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(VAO2);
