@@ -6,21 +6,6 @@
 #include <shader/shader.h>
 #include "iostream"
 
-const char *vertexShaderSource = "#version 330 core\n"
-    "layout (location = 0) in vec3 aPos;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = vec4(aPos, 1.0);\n"
-    "}\0";
-
-const char *fragmentShaderSource = "#version 330 core\n"
-    "out vec4 FragColor;\n"
-    "uniform vec4 ourColor;\n"
-    "void main()\n"
-    "{\n"
-    "    FragColor = ourColor;\n"
-    "}\0"; 
-
 void processInput(GLFWwindow* window) 
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -87,7 +72,7 @@ int main(int argc, char** argv)
 
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    Shader shader = Shader("/home/juan-ros-workspace/Documents/OpenGL_Dev/OpenGL_Tests/Primitives_Render/shaders/vertexShader.vs", "/home/juan-ros-workspace/Documents/OpenGL_Dev/OpenGL_Tests/Primitives_Render/shaders/fragmentShader.fs");
+    Shader shader("/home/juan-ros-workspace/Documents/OpenGL_Dev/OpenGL_Tests/Primitives_Render/shaders/vertexShader.vs", "/home/juan-ros-workspace/Documents/OpenGL_Dev/OpenGL_Tests/Primitives_Render/shaders/fragmentShader.fs");
 
     glGenBuffers(1, &VBO1);
     glGenBuffers(1, &VBO2);

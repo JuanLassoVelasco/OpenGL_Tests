@@ -26,7 +26,11 @@
         "string_view": "cpp",
         "system_error": "cpp",
         "type_traits": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "cstddef": "cpp",
+        "cstring": "cpp",
+        "fstream": "cpp",
+        "sstream": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/HelloWindow_V2"
 }

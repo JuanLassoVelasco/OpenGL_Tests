@@ -90,10 +90,10 @@ public:
         glDeleteShader(fragment);
     }
 
-    ~Shader()
-    {
-        glDeleteProgram(ID);
-    }
+    // ~Shader()
+    // {
+    //     glDeleteProgram(ID);
+    // }
 
     void use() 
     {
